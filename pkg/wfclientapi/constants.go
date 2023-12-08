@@ -24,8 +24,12 @@ const APIEndpoint = "https://api.wolframalpha.com/v2/query"
 
 // Pod ids
 const (
-	PodIdResult      = "Result"
-	PodIdDecimalAppx = "DecimalApproximation"
+	PodIdResult          = "Result"
+	PodIdDecimalAppx     = "DecimalApproximation"
+	PodIdSolution        = "Solution"
+	PodIdComplexSolution = "ComplexSolution"
+	PodIdRealSolution    = "RealSolution"
+	PodIdRootPlot        = "RootPlot"
 )
 
 const (
