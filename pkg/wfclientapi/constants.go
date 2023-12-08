@@ -27,3 +27,7 @@ const (
 	PodIdResult      = "Result"
 	PodIdDecimalAppx = "DecimalApproximation"
 )
+
+const (
+	PodStateStepByStepTitle = "Possible intermediate steps"
+)
