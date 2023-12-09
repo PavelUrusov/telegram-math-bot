@@ -22,7 +22,7 @@ git clone https://github.com/PavelUrusov/telegram-math-bot.git
 ```
 2. Build the project:
 ```shell
-cd TelegramMathBot
+cd telegram-math-bot
 go build -o MathBot cmd/main/main.go
 ```
 
@@ -33,11 +33,11 @@ the Wolfram API and `-apikey` for the Telegram API:
 
 - On Linux
 ```shell
-./TelegramMathBot -appid <YourAppID> -apikey <YourApiKey>
+./MathBot -appid <YourAppID> -apikey <YourApiKey>
 ```
 - On Windows
  ```shell
-TelegramMathBot.exe -appid <YourAppID> -apikey <YourApiKey>
+MathBot.exe -appid <YourAppID> -apikey <YourApiKey>
 ```
 
 ## Dependencies
