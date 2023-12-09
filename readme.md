@@ -18,7 +18,7 @@ Before running the code, ensure that you have the following prerequisites:
 ## Installation
 1. To get started with MathBot, follow these steps:
 ```shell
-git clone https://github.com/PavelUrusov/TelegramMathBot.git
+git clone https://github.com/PavelUrusov/telegram-math-bot.git
 ```
 2. Build the project:
 ```shell
