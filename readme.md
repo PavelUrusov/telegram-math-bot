@@ -54,11 +54,11 @@ for learning Go language and developing bots for Telegram.
 # Usage
 MathBot offers a variety of commands for interactive mathematical computations:
 
-- `/solve`: Solves equations.
-- `/plot`: Plots the graph of a function.
-- `/calculate`: Solves arithmetic problems
-- `/start`: Displays start-up information about the bot.
-- `/help`: Lists all available commands.
+- `/solve`: Solves equations. ![Image](https://github.com/PavelUrusov/telegram-math-bot/blob/master/examples/solve.png)
+- `/plot`: Plots the graph of a function. ![Image](https://github.com/PavelUrusov/telegram-math-bot/blob/master/examples/plot.png)
+- `/calculate`: Solves arithmetic problems. ![Image](https://github.com/PavelUrusov/telegram-math-bot/blob/master/examples/calculate.png)
+- `/start`: Displays start-up information about the bot. ![Image](https://github.com/PavelUrusov/telegram-math-bot/blob/master/examples/start.png)
+- `/help`: Lists all available commands. ![Image](https://github.com/PavelUrusov/telegram-math-bot/blob/master/examples/help.png)
 
 ## About the  Project
 Math Bot is an educational project designed
