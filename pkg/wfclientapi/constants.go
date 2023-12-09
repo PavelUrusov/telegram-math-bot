@@ -29,7 +29,7 @@ const (
 	PodIdSolution        = "Solution"
 	PodIdComplexSolution = "ComplexSolution"
 	PodIdRealSolution    = "RealSolution"
-	PodIdRootPlot        = "RootPlot"
+	PodIdPlot            = "Plot"
 )
 
 const (

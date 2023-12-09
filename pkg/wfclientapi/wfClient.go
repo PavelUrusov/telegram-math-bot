@@ -22,17 +22,17 @@ type HTTPClient interface {
 }
 type wfClient struct {
 	client      HTTPClient
-	debug       bool
+	Debug       bool
 	token       string
 	apiEndpoint string
 }
 
-func NewWfAPIClient(token string, debug bool) (WfClient, error) {
+func NewWfAPIClient(token string) (WfClient, error) {
 	wfc := &wfClient{
 		client:      &http.Client{},
 		token:       token,
 		apiEndpoint: APIEndpoint,
-		debug:       debug,
+		Debug:       false,
 	}
 	if err := wfc.validateAPIKey(); err != nil {
 		return nil, err
@@ -41,7 +41,7 @@ func NewWfAPIClient(token string, debug bool) (WfClient, error) {
 }
 
 func (wfc *wfClient) MakeRequest(params url.Values) (*ApiResponse, error) {
-	if wfc.debug {
+	if wfc.Debug {
 		logrus.Infof("values %v\n", params)
 	}
 	req, err := http.NewRequest("GET", APIEndpoint, nil)
@@ -62,7 +62,7 @@ func (wfc *wfClient) MakeRequest(params url.Values) (*ApiResponse, error) {
 }
 
 func (wfc *wfClient) MakeElementaryMathRequest(input string) (*Solution, error) {
-	if wfc.debug {
+	if wfc.Debug {
 		logrus.Infof("input %s\n", input)
 	}
 	params := wfc.arithmeticParams(input)
@@ -74,13 +74,13 @@ func (wfc *wfClient) MakeElementaryMathRequest(input string) (*Solution, error) 
 	if err != nil {
 		return nil, err
 	}
-	if wfc.debug {
+	if wfc.Debug {
 		logrus.Infof("sln %v\n", sln)
 	}
 	return sln, nil
 }
 func (wfc *wfClient) MakeEquationRequest(input string) (*Solution, error) {
-	if wfc.debug {
+	if wfc.Debug {
 		logrus.Infof("input string %s\n", input)
 	}
 	params := wfc.equationParams(input)
@@ -92,13 +92,13 @@ func (wfc *wfClient) MakeEquationRequest(input string) (*Solution, error) {
 	if err != nil {
 		return nil, err
 	}
-	if wfc.debug {
+	if wfc.Debug {
 		logrus.Infof("solution %v\n", sln)
 	}
 	return sln, nil
 }
 func (wfc *wfClient) MakePlotRequest(input string) (*Solution, error) {
-	if wfc.debug {
+	if wfc.Debug {
 		logrus.Infof("input string %s\n", input)
 	}
 	params := wfc.plotParams(input)
@@ -110,7 +110,7 @@ func (wfc *wfClient) MakePlotRequest(input string) (*Solution, error) {
 	if err != nil {
 		return nil, err
 	}
-	if wfc.debug {
+	if wfc.Debug {
 		logrus.Infof("solution %v\n", sln)
 	}
 	return sln, nil
@@ -137,7 +137,7 @@ func (wfc *wfClient) equationParams(input string) url.Values {
 func (wfc *wfClient) plotParams(input string) url.Values {
 	params := url.Values{}
 	params.Add(Input, input)
-	params.Add(Include, PodIdRootPlot)
+	params.Add(Include, PodIdPlot)
 
 	return params
 }
@@ -149,7 +149,7 @@ func (wfc *wfClient) toSolution(r *ApiResponse) (*Solution, error) {
 		return nil, errors.New("can't find a solution")
 	}
 	for _, p := range qr.Pods {
-		if p.ID == PodIdRootPlot {
+		if p.ID == PodIdPlot {
 			sln.ImageStepsURL = append(sln.ImageStepsURL, p.Subpods[0].Img.Src)
 			continue
 		}
@@ -179,7 +179,7 @@ func (wfc *wfClient) toApiResponse(response *http.Response) (*ApiResponse, error
 	if err != nil {
 		return nil, err
 	}
-	if wfc.debug {
+	if wfc.Debug {
 		logrus.Infof("ApiResponse: %v\n", apiResponse)
 	}
 	return apiResponse, nil
@@ -189,6 +189,8 @@ func (wfc *wfClient) validateAPIKey() error {
 	if err != nil {
 		return fmt.Errorf("API key validation failed: %v", err)
 	}
-	logrus.Infof("API key validated successfully")
+	if wfc.Debug {
+		logrus.Infof("API key validated successfully")
+	}
 	return nil
 }
