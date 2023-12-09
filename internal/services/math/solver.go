@@ -104,6 +104,9 @@ func (s *Solver) getCommandAndMessage(update *tgbotapi.Update) (Executor, *tgbot
 	if !ok {
 		cmd, _ = s.commands[HelpCommandID]
 	}
+	if update.Message.CommandArguments() == "" {
+		cmd, _ = s.commands[HelpCommandID]
+	}
 	message := update.Message
 	return cmd, message
 }
