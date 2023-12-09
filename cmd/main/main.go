@@ -9,15 +9,17 @@ import (
 
 var appid app.WolframAppID
 var apikey app.TelegramAPIKey
+var debug bool
 
 func main() {
-	application := app.NewApp(appid, apikey)
+	application := app.NewApp(appid, apikey, debug)
 	application.Run()
 }
 
 func init() {
 	appidPtr := flag.String("appid", "", "Application ID")
 	apikeyPtr := flag.String("apikey", "", "API Key")
+	d := flag.Bool("debug", false, "debug mode")
 
 	flag.Parse()
 
@@ -27,5 +29,6 @@ func init() {
 	}
 
 	appid = app.WolframAppID(*appidPtr)
+	debug = *d
 	apikey = app.TelegramAPIKey(*apikeyPtr)
 }

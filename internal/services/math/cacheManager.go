@@ -1,14 +1,13 @@
 package math
 
 import (
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"sync"
 	"time"
 )
 
 type CacheManager interface {
-	AddToCache(hashKey string, data []tgbotapi.Chattable)
-	GetFromCache(hashKey string) ([]tgbotapi.Chattable, bool)
+	AddToCache(hashKey string, data interface{})
+	GetFromCache(hashKey string) (interface{}, bool)
 }
 
 type cacheManager struct {
@@ -21,18 +20,18 @@ func NewCacheManager() CacheManager {
 }
 
 type CacheItem struct {
-	Data       []tgbotapi.Chattable
+	Data       interface{}
 	LastAccess time.Time
 }
 
-func (s *cacheManager) AddToCache(hashKey string, data []tgbotapi.Chattable) {
+func (s *cacheManager) AddToCache(hashKey string, data interface{}) {
 	s.cache.Store(hashKey, CacheItem{
 		Data:       data,
 		LastAccess: time.Now(),
 	})
 }
 
-func (s *cacheManager) GetFromCache(hashKey string) ([]tgbotapi.Chattable, bool) {
+func (s *cacheManager) GetFromCache(hashKey string) (interface{}, bool) {
 	item, found := s.cache.Load(hashKey)
 	if !found {
 		return nil, false

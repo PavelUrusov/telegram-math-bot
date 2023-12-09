@@ -18,7 +18,7 @@ type Solver struct {
 	commands      map[string]Executor
 }
 
-func NewSolver(wolframToken, telegramToken string) (*Solver, error) {
+func NewSolver(wolframToken, telegramToken string, debug bool) (*Solver, error) {
 	solver := &Solver{}
 	wfClient, err := wfclientapi.NewWfAPIClient(wolframToken)
 	if err != nil {
@@ -32,7 +32,7 @@ func NewSolver(wolframToken, telegramToken string) (*Solver, error) {
 	solver.wfClient = wfClient
 	solver.TimeoutUpdate = DefaultTimeoutUpdate
 	solver.OffsetUpdate = DefaultOffsetUpdate
-	solver.Debug = false
+	solver.Debug = debug
 	solver.cache = NewCacheManager()
 
 	solver.initCommands()
@@ -55,8 +55,8 @@ func (s *Solver) handleUpdate(update *tgbotapi.Update) {
 	if s.Debug {
 		logrus.Infof("[%s] %s", update.Message.From.UserName, update.Message.Text)
 	}
-	cmd, args := s.getCommandAndArgs(update)
-	msgs = s.ExecuteCommand(cmd, args, update.Message.Chat.ID)
+	cmd, message := s.getCommandAndMessage(update)
+	msgs = s.ExecuteCommand(cmd, message, update.Message.Chat.ID)
 	s.sendMessage(msgs)
 }
 
@@ -67,17 +67,16 @@ func (s *Solver) UpdateConfig() tgbotapi.UpdateConfig {
 	return cfg
 }
 
-func (s *Solver) ExecuteCommand(cmd Executor, input string, chatId int64) []tgbotapi.Chattable {
-	hashKey := hashInput(input)
+func (s *Solver) ExecuteCommand(cmd Executor, message *tgbotapi.Message, chatId int64) []tgbotapi.Chattable {
+	hashKey := hashString(message.Text)
 	if cachedResponse, found := s.cache.GetFromCache(hashKey); found {
-		return cachedResponse
+		return cmd.BaseExecute(message.Chat.ID, nil, cachedResponse.(*wfclientapi.Solution))
 	}
-	response := cmd.Execute(input, chatId, s)
-	s.cache.AddToCache(hashKey, response)
+	response := cmd.Execute(message, s)
 	return response
 }
 
-func hashInput(input string) string {
+func hashString(input string) string {
 	h := sha256.New()
 	h.Write([]byte(input))
 	return fmt.Sprintf("%x", h.Sum(nil))
@@ -100,13 +99,13 @@ func (s *Solver) сommand(upd *tgbotapi.Update) (Executor, bool) {
 	return cmd, false
 }
 
-func (s *Solver) getCommandAndArgs(update *tgbotapi.Update) (Executor, string) {
+func (s *Solver) getCommandAndMessage(update *tgbotapi.Update) (Executor, *tgbotapi.Message) {
 	cmd, ok := s.сommand(update)
 	if !ok {
 		cmd, _ = s.commands[HelpCommandID]
 	}
-	args := update.Message.CommandArguments()
-	return cmd, args
+	message := update.Message
+	return cmd, message
 }
 
 func (s *Solver) sendMessage(msgs []tgbotapi.Chattable) {

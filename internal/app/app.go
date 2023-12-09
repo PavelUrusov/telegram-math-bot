@@ -12,8 +12,8 @@ type app struct {
 	solver *math.Solver
 }
 
-func NewApp(wolframAppID WolframAppID, telegramAPIKey TelegramAPIKey) App {
-	solver, err := math.NewSolver(string(wolframAppID), string(telegramAPIKey))
+func NewApp(wolframAppID WolframAppID, telegramAPIKey TelegramAPIKey, debug bool) App {
+	solver, err := math.NewSolver(string(wolframAppID), string(telegramAPIKey), debug)
 	if err != nil {
 		panic(err.Error())
 	}
